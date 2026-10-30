@@ -51,6 +51,7 @@ python scripts/s13_si_analyses.py imputed
 python scripts/s13_si_analyses.py rv
 python scripts/s14_region_loads.py
 python scripts/s15_top_validation.py
+python scripts/s16_matched_panel_precursor.py
 ```
 
 The second argument `0` in the main comparison skips its earlier auxiliary permutation calculation; the studentized plant-label comparison is calculated by `s11_studentized_permutation.py`. Main/stage/biosolids analyses use ten imputations. The plant summaries in the stage figure use five imputations, as specified in the Supporting Information. Default values and seeds are explicit in each script.
@@ -58,6 +59,10 @@ The second argument `0` in the main comparison skips its earlier auxiliary permu
 ## Interpretation and reproducibility checks
 
 The principal comparison uses 373 pairs from 54 plants. Expanded-panel precursor indices are computed separately by treatment group; reported aqueous indices concern 26 biological plants within the 31-plant expanded population. The biosolids oxidation index concerns 11 biological plants and has a different denominator. Precursor indices are screening ratios, not conversion yields or closed mass balances. Annualized sampled-day loads are conditional summaries, not national annual inventories.
+
+The matched-panel analysis holds the expanded population fixed at 153 pairs from 31 plants (132 pairs from 26 biological plants). With the full 26-compound panel, the biological-plant precursor index spans approximately 15–135% across ND = 0, DL/2 and DL. Restricting all three substitutions to the same 21 compounds used by the detection-supported imputation narrows this range to approximately 14–70%. The approximately 18% imputed estimate uses that 21-compound panel. Comparing 15–135% directly with 18% combines changes in censoring treatment and chemical coverage; the matched-panel comparison distinguishes these contributions.
+
+`s16_matched_panel_precursor.py` uses only `data_clean/pairs_inf_eff.parquet` and `data_clean/plants.csv`; it does not refit imputation or DML. It writes the 12-row table to `results/s16_matched_panel.csv`, with plant changes and detection-support metadata alongside it. If the earlier `results/s06_precursor_budget.csv` exists, it also verifies the full-panel results against that calculation. An alternative destination can be supplied with `--output /path/to/table.csv`, and `--root /path/to/repository` selects another input repository.
 
 `python -m unittest discover -s tests -v` checks numerical primitives and parsing invariants. The public-code preparation verified syntax for every script, ran these tests and reproduced the cleaning/pairing outputs against the original analysis. The full stochastic model suite was not refitted during packaging. Small numerical differences can arise across software/platform versions. The Supporting Information documents design limitations, benchmark scope, model settings and interval definitions.
 
