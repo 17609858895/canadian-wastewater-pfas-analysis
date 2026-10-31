@@ -44,7 +44,7 @@ def main():
     effect = pd.read_csv(res / 'field_nested_M20_s3_r200.csv')
     pfca = effect.set_index('outcome').loc['sumPFCA']
     process = pd.read_csv(SOURCE / 'results/s05_process.csv')
-    settings = {'biological (pooled)': (pfca.theta, pfca.se, pfca.BR53_df_BR)}
+    settings = {'biological (pooled)': (pfca.theta, pfca.se, pfca.BR5_df_BR)}
     settings.update({r.proc: (r.theta, r.se, np.inf)
                      for r in process[process.outcome == 'sumPFCA'].itertuples()})
     # Shared transported contrast within a scenario: regional sums then have
@@ -79,6 +79,9 @@ def main():
     effect['method'] = 'LOD-DML'
     effect['lo95'] = effect.BR53_lo95
     effect['hi95'] = effect.BR53_hi95
+    pooled_mask = effect.outcome.eq('sumPFCA')
+    effect.loc[pooled_mask, 'lo95'] = effect.loc[pooled_mask, 'BR5_lo95']
+    effect.loc[pooled_mask, 'hi95'] = effect.loc[pooled_mask, 'BR5_hi95']
     effect.to_csv(OUT / 's03_effects.csv', index=False)
     # Curves use deterministic distribution quantiles rather than simulation.
     curves = []
@@ -96,8 +99,8 @@ def main():
                    conditional_increment_kg_yr=float(pooled.added_g_yr.sum()/1000),
                    conditional_increment_lo_kg_yr=float(pooled.added_lo.sum()/1000),
                    conditional_increment_hi_kg_yr=float(pooled.added_hi.sum()/1000),
-                   source='20 nested held-out completed datasets for descriptive sums; primary BR53 contrast',
-                   G=54, primary_G=6, plants_with_load=52, pooled_df=float(pfca.BR53_df_BR))
+                   source='20 nested held-out completed datasets for descriptive sums; reference-limited BR5 contrast',
+                   G=54, primary_G=6, plants_with_load=52, pooled_df=float(pfca.BR5_df_BR))
     (OUT / 'summary.json').write_text(json.dumps(summary, indent=2), 'utf-8')
     print(json.dumps(summary, indent=2))
 
