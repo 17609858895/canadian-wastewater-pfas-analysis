@@ -1,6 +1,6 @@
 # Canadian wastewater PFAS analysis
 
-Core data-processing and statistical-analysis code for **Measurement bounds distinguish PFCA enrichment from precursor attribution across Canadian wastewater plants**.
+Core data-processing and statistical-analysis code for **Measurement constraints on PFCA enrichment and precursor accounting in Canadian wastewater treatment**.
 
 The analysis compares paired influent and effluent measurements, examines treatment stages and biosolids, and evaluates the sensitivity of targeted precursor indices to analytical censoring. It implements conditional AFT multiple imputation, plant-grouped nuisance fitting, semi-synthetic benchmarks, sensitivity analyses and complementary biosolids oxidation calculations. The observed process groups are not observed same-plant upgrades.
 
