@@ -279,7 +279,7 @@ def wilson(successes,n):
     if n==0:return math.nan,math.nan
     z=stats.norm.ppf(.975);p=successes/n;den=1+z*z/n
     center=(p+z*z/(2*n))/den;half=z*np.sqrt(p*(1-p)/n+z*z/(4*n*n))/den
-    return float(center-half),float(center+half)
+    return float(max(0,min(p,center-half))),float(min(1,max(p,center+half)))
 
 
 def add_finite_m_intervals(frame):
